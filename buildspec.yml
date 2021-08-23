@@ -1,0 +1,39 @@
+# Do not change version. This is the version of aws buildspec, not the version of your buldspec file.
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 10  
+    commands:
+      - echo install started on `date`
+      - echo install yarn...
+      - npm install -g yarn
+  pre_build:
+    commands:
+      - echo pre_build started on `date`
+      - echo Installing source NPM dependencies...
+      - pwd
+      - echo Installing yarn dependencies...
+      - cd src
+      - yarn install
+      - yarn build
+      - pwd
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Compiling the Node.js code
+      - pwd
+      - yarn build
+  post_build:
+    commands:
+      - echo post_build completed on `date`
+      - pwd
+# Include only the files required for your application to run.
+# Do not use recursively include artifacts from node_modules directory as it will include unnecessary packages 
+# used only for building and testing.
+# ExpressJS apps will need other artifact directories included (bin/*, public/*, routes/*, views/* etc).
+artifacts:
+  files:
+    - .ebextensions/*
+    - src/**/*

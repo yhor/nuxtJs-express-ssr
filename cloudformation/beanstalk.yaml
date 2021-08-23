@@ -1,0 +1,118 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  ApplicationInstanceType:
+    Description: The compute and memory capacity of the application's EC2 instance type
+    Type: String
+    Default: t2.micro
+  ApplicationAutoScalingMinSize:
+    Description: The minimum number of instances in the application auto scaling group
+    Type: Number
+    Default: 1
+    MinValue: 1
+  ApplicationAutoScalingMaxSize:
+    Description: The maximum number of instances in the application auto scaling group
+    Type: Number
+    Default: 2
+    MinValue: 1
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
+    Type: AWS::EC2::KeyPair::KeyName
+    Default: ysy-key
+    ConstraintDescription: Must be the name of an existing EC2 KeyPair.
+  SecurityName:
+    Description: SecurityName
+    Type: String
+    Default: launch-wizard-14
+  SecurityId:
+    Description: SecurityId
+    Type: String
+    Default: sg-07123110e4d5666ef
+  HttpsArn:
+    Description: yeol.tech https arn
+    Type: String
+    Default: arn:aws:acm:ap-northeast-2:871466012612:certificate/a8bd082e-f8db-4c9b-95db-c90077fd614a
+
+Outputs:
+  OriginApplicationUrl:
+    Description: The URL to the load balancer for the Origin application
+    Value: !GetAtt OriginEnvironment.EndpointURL
+
+Resources:
+  NuxtApplication:
+    Type: AWS::ElasticBeanstalk::Application
+    Properties:
+      ApplicationName: NUXT-VUE
+      Description: AWS Elastic Beanstalk NUXT-VUE Application
+
+  # Origin 
+  OriginEnvironment:
+    Type: AWS::ElasticBeanstalk::Environment
+    Properties:
+      ApplicationName: !Ref NuxtApplication
+      Description: AWS ElasticBeanstalk NUXT-VUE-ORIGIN Environment
+      EnvironmentName: NUXT-VUE-ORIGIN
+      TemplateName: !Ref OriginConfigurationTemplate
+  OriginConfigurationTemplate:
+    Type: AWS::ElasticBeanstalk::ConfigurationTemplate
+    DependsOn:
+      - NuxtApplication
+    Properties:
+      ApplicationName: !Ref NuxtApplication
+      Description: AWS ElasticBeanstalk NUXT-VUE-ORIGIN Configuration Template
+      PlatformArn: arn:aws:elasticbeanstalk:ap-northeast-2::platform/Node.js 12 running on 64bit Amazon Linux 2/5.3.2
+      OptionSettings:
+      #aws:autoscaling:asg
+      - Namespace: aws:autoscaling:asg
+        OptionName: MinSize
+        Value: !Ref ApplicationAutoScalingMinSize
+      - Namespace: aws:autoscaling:asg
+        OptionName: MaxSize
+        Value: !Ref ApplicationAutoScalingMaxSize
+      #aws:autoscaling:launchconfiguration
+      - Namespace: aws:autoscaling:launchconfiguration
+        OptionName: IamInstanceProfile
+        Value: aws-elasticbeanstalk-ec2-role
+      - Namespace: aws:autoscaling:launchconfiguration
+        OptionName: InstanceType
+        Value: !Ref ApplicationInstanceType
+      - Namespace: aws:autoscaling:launchconfiguration
+        OptionName: EC2KeyName
+        Value: !Ref KeyName
+      #aws:autoscaling:launchconfiguration SecurityGroups default GroupName
+      - Namespace: aws:autoscaling:launchconfiguration
+        OptionName: SecurityGroups
+        Value: !Ref SecurityName
+      #aws:elasticbeanstalk:environment
+      - Namespace: aws:elasticbeanstalk:environment
+        OptionName: EnvironmentType
+        Value: LoadBalanced
+      - Namespace: aws:elasticbeanstalk:environment
+        OptionName: ServiceRole
+        Value: aws-elasticbeanstalk-service-role
+      - Namespace: aws:elasticbeanstalk:environment
+        OptionName: LoadBalancerType
+        Value: application
+      - Namespace: aws:elasticbeanstalk:environment:process:default
+        OptionName: StickinessEnabled
+        Value: 'true'
+      #aws:elasticbeanstalk:healthreporting
+      - Namespace: aws:elasticbeanstalk:healthreporting:system
+        OptionName: SystemType
+        Value: enhanced
+      #aws:elbv2:loadbalancer SecurityGroups default GroupName 
+      - Namespace: aws:elbv2:loadbalancer
+        OptionName: SecurityGroups
+        Value: !Ref SecurityId
+      #aws:elbv2:listener:default ListenerEnabled set false mean : 80 port disable, .ebextensions alb.config create HTTPSRedirect
+      - Namespace: aws:elbv2:listener:default
+        OptionName: ListenerEnabled
+        Value: false
+      - Namespace: aws:elbv2:listener:443
+        OptionName: ListenerEnabled
+        Value: true
+      - Namespace: aws:elbv2:listener:443
+        OptionName: Protocol
+        Value: HTTPS
+      - Namespace: aws:elbv2:listener:443
+        OptionName: SSLCertificateArns
+        Value: !Ref HttpsArn
