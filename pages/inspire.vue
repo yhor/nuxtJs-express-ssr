@@ -24,10 +24,11 @@
       title: 'inspire',
       meta: [
         {
-          hid: 'inspire111',
+          hid: 'description',
           name: 'inspire222',
           content: 'inspire333'
-        }
+        },
+        { hid: 'og:title', name: 'inspire', content: 'inspire OG' },
       ],
     },
   }

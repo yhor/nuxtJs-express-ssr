@@ -17,6 +17,17 @@
         apiCheck: ''
       }
     },
+    head: {
+      title: 'Test',
+      meta: [
+        {
+          hid: 'description',
+          name: 'Test222',
+          content: 'Test333'
+        },
+        { hid: 'og:title', name: 'Test', content: '테스트 OG' },
+      ],
+    },
     methods: {
       async api() {
         console.debug('call Api');
@@ -29,16 +40,6 @@
           this.apiCheck = error;
         }
       }
-    },
-    head: {
-      title: 'Test',
-      meta: [
-        {
-          hid: 'Test111',
-          name: 'Test222',
-          content: 'Test333'
-        }
-      ],
     },
   }
 </script>
