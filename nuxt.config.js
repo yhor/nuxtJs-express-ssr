@@ -1,4 +1,9 @@
 import colors from 'vuetify/es5/util/colors'
+console.log('process.env', process.env.NODE_ENV);
+
+if (process.env.NODE_ENV === 'production') {
+  process.env.BASE_URL = 'https://nuxt.yeol.tech'
+}
 
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head

@@ -13,6 +13,7 @@
 <script>
   export default {
     data() {
+      console.log('process.env', process.env);
       return {
         title: '테스트',
         apiCheck: ''
@@ -40,7 +41,7 @@
           {
             hid: 'og:image',
             property: 'og:image',
-            content: `${process.env.baseUrl}/test.png`
+            content: `${process.env.BASE_URL}/test.png`
           },
         ],
       }

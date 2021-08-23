@@ -3,4 +3,4 @@ aws cloudformation update-stack --stack-name lawcator-vue --template-body file:/
 
 
 
-aws cloudformation create-stack --stack-name nuxt-test --template-body file://beanstalk.yaml --capabilities CAPABILITY_IAM
+aws cloudformation create-stack --stack-name nuxt-server --template-body file://beanstalk.yaml --capabilities CAPABILITY_IAM
