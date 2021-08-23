@@ -15,7 +15,6 @@ phases:
       - echo Installing source NPM dependencies...
       - pwd
       - echo Installing yarn dependencies...
-      - cd src
       - yarn install
       - yarn build
       - pwd
