@@ -20,12 +20,10 @@ phases:
   build:
     commands:
       - echo Build started on `date`
-      - echo Compiling the Node.js code
-      - pwd
+      - echo build
+      - yarn build
+      - echo generate
       - yarn generate
-  post_build:
-    commands:
-      - echo post_build completed on `date`
       - pwd
 # Include only the files required for your application to run.
 # Do not use recursively include artifacts from node_modules directory as it will include unnecessary packages 
