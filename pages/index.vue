@@ -85,7 +85,22 @@
           hid: 'Index111',
           name: 'Index222',
           content: 'Index333'
-        }
+        },
+        { 
+          hid: 'og:title',
+          name: '인덱스',
+          content: '인덱스'
+        },
+        {
+          hid: 'og:description',
+          property: 'og:description',
+          content: '윈덱스'
+        },
+        {
+          hid: 'og:image',
+          property: 'og:image',
+          content: `${process.env.baseUrl}/index.png`
+        },
       ],
     },
   }

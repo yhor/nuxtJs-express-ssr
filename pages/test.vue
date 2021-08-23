@@ -14,19 +14,36 @@
   export default {
     data() {
       return {
+        title: '테스트',
         apiCheck: ''
       }
     },
-    head: {
-      title: 'Test',
-      meta: [
-        {
-          hid: 'description',
-          name: 'Test222',
-          content: 'Test333'
-        },
-        { hid: 'og:title', name: 'Test', content: '테스트 OG' },
-      ],
+    head() {
+      return {
+        title: this.title,
+        meta: [
+          {
+            hid: 'description',
+            name: 'Test222',
+            content: 'Test333'
+          },
+          {
+            hid: 'og:title',
+            property: 'og:title',
+            content: this.title
+          },
+          {
+            hid: 'og:description',
+            property: 'og:description',
+            content: '설명~~~~~~~~~~'
+          },
+          {
+            hid: 'og:image',
+            property: 'og:image',
+            content: `${process.env.baseUrl}/test.png`
+          },
+        ],
+      }
     },
     methods: {
       async api() {
