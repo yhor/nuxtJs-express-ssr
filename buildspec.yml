@@ -16,7 +16,6 @@ phases:
       - pwd
       - echo Installing yarn dependencies...
       - yarn install
-      - yarn build
       - pwd
   build:
     commands:
@@ -34,5 +33,4 @@ phases:
 # ExpressJS apps will need other artifact directories included (bin/*, public/*, routes/*, views/* etc).
 artifacts:
   files:
-    - .ebextensions/*
-    - src/**/*
+    - '**/*'
