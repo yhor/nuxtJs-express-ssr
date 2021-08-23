@@ -22,7 +22,7 @@ phases:
       - echo Build started on `date`
       - echo Compiling the Node.js code
       - pwd
-      - yarn build
+      - yarn generate
   post_build:
     commands:
       - echo post_build completed on `date`
