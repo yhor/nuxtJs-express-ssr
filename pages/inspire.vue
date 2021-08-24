@@ -22,7 +22,6 @@
 <script>
   export default {
     head() {
-      console.log('this.$config.baseURL', this.$config.baseURL);
       return {
         title: 'inspire',
         meta: [
