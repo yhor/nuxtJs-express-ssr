@@ -14,6 +14,7 @@
           </small>
         </footer>
       </blockquote>
+      <img src='~/assets/og/aaaa.png'>
     </v-col>
   </v-row>
 </template>
@@ -33,12 +34,12 @@
           {
             hid: 'og:description',
             property: 'og:description',
-            content: '설명~~~~~~~~~~'
+            content: 'Inspire'
           },
           {
             hid: 'og:image',
             property: 'og:image',
-            content: `${this.$config.baseURL}/assets/og/aaaa.png`
+            content: `${this.BASE_URL}/og/aaaa.png`
           },
         ],
       }
