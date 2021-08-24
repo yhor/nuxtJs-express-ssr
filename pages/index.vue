@@ -99,7 +99,7 @@
         {
           hid: 'og:image',
           property: 'og:image',
-          content: `${process.env.baseUrl}/index.png`
+          content: `${this.$config.baseURL}/index.png`
         },
       ],
     },

@@ -16,7 +16,8 @@
     data() {
       return {
         title: '테스트',
-        apiCheck: ''
+        apiCheck: '',
+        NODE_ENV: ''
       }
     },
     head() {
@@ -41,7 +42,7 @@
           {
             hid: 'og:image',
             property: 'og:image',
-            content: `${this.BASE_URL}/og/tmdd.png`
+            content: `${this.$config.baseURL}/og/tmdd.png`
           },
         ],
       }

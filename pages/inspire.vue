@@ -22,6 +22,7 @@
 <script>
   export default {
     head() {
+      console.log('this.$config.baseURL', this.$config.baseURL);
       return {
         title: 'inspire',
         meta: [
@@ -39,7 +40,7 @@
           {
             hid: 'og:image',
             property: 'og:image',
-            content: `${this.BASE_URL}/og/aaaa.png`
+            content: `${this.$config.baseURL}/og/aaaa.png`
           },
         ],
       }
