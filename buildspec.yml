@@ -6,11 +6,15 @@ phases:
     runtime-versions:
       nodejs: 10  
     commands:
+      - install
+      - ls -al
       - echo install started on `date`
       - echo install yarn...
       - npm install -g yarn
   pre_build:
     commands:
+      - echo pre_build
+      - ls -al
       - echo pre_build started on `date`
       - echo Installing source NPM dependencies...
       - pwd
@@ -20,6 +24,7 @@ phases:
   build:
     commands:
       - echo Build started on `date`
+      - ls -al
       - echo build
       - yarn build
       - echo generate
