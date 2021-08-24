@@ -1,13 +1,15 @@
 import colors from 'vuetify/es5/util/colors'
-console.log('process.env', process.env.NODE_ENV);
+import dotenv from 'dotenv';
+dotenv.config();
 
-if (process.env.NODE_ENV === 'production') {
-  process.env.BASE_URL = 'https://nuxt.yeol.tech'
-}
+// if (process.env.NODE_ENV === 'production') {
+//   process.env.BASE_URL = 'https://nuxt.yeol.tech'
+// }
 
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
 
+  publicRuntimeConfig: { baseURL: process.env.BASE_URL },
   server: {
     port: 8080
   },
@@ -60,13 +62,9 @@ export default {
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
-    baseURL: process.env.BASE_URL || 'http://localhost:8080'
+    baseURL: '/'
   },
 
-
-  env: {
-    baseUrl: process.env.BASE_URL || 'http://localhost:8080'
-  },
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ['~/assets/variables.scss'],
