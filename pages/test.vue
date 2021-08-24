@@ -6,6 +6,7 @@
       <div>
         <button class="btn btn-primary" @click="api">API GOGO</button>
       </div>
+      <img src='~/assets/og/tmdd.png'>
     </v-col>
   </v-row>
 </template>
@@ -35,14 +36,12 @@
           {
             hid: 'og:description',
             property: 'og:description',
-            content: '~/assets/og/aaaa.png'
-            // content: '설명~~~~~~~~~~'
+            content: '테스트 상세페이지이다'
           },
           {
             hid: 'og:image',
             property: 'og:image',
-            // content: `${this.BASE_URL}/test.png`
-            content: '~/assets/og/index.png'
+            content: `${this.BASE_URL}/og/tmdd.png`
           },
         ],
       }
