@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
-    "start": "node ./node_modules/pm2/bin/pm2 start ecosystem.config.js && node ./node_modules/pm2/bin/pm2 log",
+    "start": "node ./node_modules/pm2/bin/pm2 start ecosystem.config.js",
     "list": "node ./node_modules/pm2/bin/pm2 list",
     "monit": "node ./node_modules/pm2/bin/pm2 monit",
     "generate": "nuxt generate",
