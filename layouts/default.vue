@@ -110,6 +110,16 @@ export default {
           icon: 'mdi-chart-bubble',
           title: 'Test',
           to: '/test'
+        },
+        {
+          icon: 'mdi-apps',
+          title: '공지사항',
+          to: '/board/notice'
+        },
+        {
+          icon: 'mdi-apps',
+          title: '자유게시판',
+          to: '/board/free'
         }
       ],
       miniVariant: false,

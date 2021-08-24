@@ -1,14 +1,12 @@
-import colors from 'vuetify/es5/util/colors'
+import colors from 'vuetify/es5/util/colors';
 import dotenv from 'dotenv';
 dotenv.config();
 
-// if (process.env.NODE_ENV === 'production') {
-//   process.env.BASE_URL = 'https://nuxt.yeol.tech'
-// }
-
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
-
+  env: {
+    NODE_ENV: process.env.NODE_ENV,
+  },
   publicRuntimeConfig: { baseURL: process.env.BASE_URL },
   server: {
     port: 8080
