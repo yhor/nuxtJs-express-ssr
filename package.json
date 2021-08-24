@@ -14,12 +14,18 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.13.6",
+    "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/vuetify": "^1.12.1",
     "core-js": "^3.15.1",
-    "dotenv": "^10.0.0",
+    "dayjs": "^1.10.6",
     "express": "^4.17.1",
+    "mysql2": "^2.3.0",
     "nuxt": "^2.15.7",
     "pm2": "^5.1.1",
+    "sequelize": "^6.6.5",
+    "sequelize-auto": "^0.8.4",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.1.6",
     "vuetify": "^2.5.5"
   },
   "devDependencies": {
