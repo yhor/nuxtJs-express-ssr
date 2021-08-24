@@ -13,7 +13,6 @@
 <script>
   export default {
     data() {
-      console.log('process.env', process.env);
       return {
         title: '테스트',
         apiCheck: ''
@@ -36,12 +35,14 @@
           {
             hid: 'og:description',
             property: 'og:description',
-            content: '설명~~~~~~~~~~'
+            content: '~/assets/og/aaaa.png'
+            // content: '설명~~~~~~~~~~'
           },
           {
             hid: 'og:image',
             property: 'og:image',
-            content: `${process.env.BASE_URL}/test.png`
+            // content: `${this.BASE_URL}/test.png`
+            content: '~/assets/og/index.png'
           },
         ],
       }

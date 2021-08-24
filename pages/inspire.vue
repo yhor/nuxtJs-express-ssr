@@ -20,26 +20,28 @@
 
 <script>
   export default {
-    head: {
-      title: 'inspire',
-      meta: [
-        {
-          hid: 'description',
-          name: 'inspire222',
-          content: 'inspire333'
-        },
-        { hid: 'og:title', name: 'inspire', content: 'inspire OG' },
-        {
-          hid: 'og:description',
-          property: 'og:description',
-          content: '설명~~~~~~~~~~'
-        },
-        {
-          hid: 'og:image',
-          property: 'og:image',
-          content: `${process.env.baseUrl}/aaaa.png`
-        },
-      ],
+    head() {
+      return {
+        title: 'inspire',
+        meta: [
+          {
+            hid: 'description',
+            name: 'inspire222',
+            content: 'inspire333'
+          },
+          { hid: 'og:title', name: 'inspire', content: 'inspire OG' },
+          {
+            hid: 'og:description',
+            property: 'og:description',
+            content: '설명~~~~~~~~~~'
+          },
+          {
+            hid: 'og:image',
+            property: 'og:image',
+            content: `${this.$config.baseURL}/assets/og/aaaa.png`
+          },
+        ],
+      }
     },
   }
 </script>
