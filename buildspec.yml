@@ -6,7 +6,6 @@ phases:
     runtime-versions:
       nodejs: 10  
     commands:
-      - install
       - ls -al
       - echo install started on `date`
       - echo install yarn...
