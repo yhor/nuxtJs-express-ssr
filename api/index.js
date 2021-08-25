@@ -16,11 +16,13 @@ const boardRouter = require("./routes/admin/board");
 const memberRouter = require("./routes/admin/member");
 const modulesRouter = require("./routes/admin/modules");
 const documentsRouter = require("./routes/admin/documents");
+const commentsRouter = require("./routes/admin/comments");
 
 app.use("/admin/board", boardRouter);
 app.use("/admin/member", memberRouter);
 app.use("/admin/modules", modulesRouter);
 app.use("/admin/documents", documentsRouter);
+app.use("/admin/comments", commentsRouter);
 
 /* 공용 */
 const fileRouter = require("./routes/file");
