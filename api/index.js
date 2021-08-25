@@ -7,9 +7,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 const indexRouter = require("./routes/index");
-const boardRouter = require("./routes/board");
-const memberRouter = require("./routes/member");
-const modulesRouter = require("./routes/modules");
+const boardRouter = require("./routes/admin/board");
+const memberRouter = require("./routes/admin/member");
+const modulesRouter = require("./routes/admin/modules");
 
 app.get('/test', (req, res) => {
   console.debug('/api/test');
@@ -18,9 +18,9 @@ app.get('/test', (req, res) => {
 
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/", indexRouter);
-app.use("/board", boardRouter);
-app.use("/member", memberRouter);
-app.use("/modules", modulesRouter);
+app.use("/admin/board", boardRouter);
+app.use("/admin/member", memberRouter);
+app.use("/admin/modules", modulesRouter);
 
 
 module.exports = {

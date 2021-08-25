@@ -1,24 +1,24 @@
 import express from 'express';
-import { badRequest } from '../helper/customError';
-import { now } from '../helper/timeHelper';
+import { badRequest } from '../../helper/customError';
+import { now } from '../../helper/timeHelper';
 
-const { modules } = require('../models');
+const { documents } = require('../../models');
 const router = express.Router();
 
 
 /**
  * @swagger
  * tags:
- *   name: modules
- *   description: 모듈관련
+ *   name: admin/documents
+ *   description: 게시글
  */
 
 /**
  * @swagger
- * /api/modules:
+ * /api/admin/documents:
  *   get:
- *     summary: 모듈 리스트
- *     tags: [modules]
+ *     summary: 게시글 리스트
+ *     tags: [admin/documents]
  *     parameters:
  *       - in: query
  *         name: module
@@ -32,7 +32,7 @@ const router = express.Router();
  *         content:
  *           application/json:
  *             example:
- *               message: "모듈 조회 성공"
+ *               message: "게시글 조회 성공"
  *               data: [{ 
  *                 "module_srl": 1,
  *                 "module": "board",
@@ -52,34 +52,34 @@ const router = express.Router();
   try {
     const queryCondition = req.query;
 
-    const result = await modules.findAll({ where: queryCondition });
+    const result = await documents.findAll({ where: queryCondition });
 
     return res.json({
       success: true,
-      message: '모듈 조회 성공',
+      message: '게시글 조회 성공',
       data: result,
       now: now()
     });
   } catch (error) {
     console.log('error', error);
-    return badRequest(res, '모듈 조회 실패', error);
+    return badRequest(res, '게시글 조회 실패', error);
   }
 });
 
 
 /**
  * @swagger
- * /api/modules:
+ * /api/admin/documents:
  *   post:
- *     summary: 모듈 생성
- *     tags: [modules]
+ *     summary: 게시글 생성
+ *     tags: [admin/documents]
  *     requestBody:
- *       description: 모듈 정보
+ *       description: 게시글 정보
  *       required: true
  *       content:
  *         application/json:
  *           schema:
- *             $ref: "#/definitions/module"
+ *             $ref: "#/definitions/documents"
  *     responses:
  *       allOf:
  *       - $ref: '#/components/responses/All'
@@ -87,21 +87,21 @@ const router = express.Router();
  *         content:
  *           application/json:
  *             example:
- *               message: "모듈 생성 성공"
+ *               message: "게시글 생성 성공"
  */
 
  router.post('/', async (req, res) => {
   try {
     const insertData = req.body;
     insertData.created_at = now();
-    await modules.insert(insertData);
+    await documents.create(insertData);
 
     return res.json({
       success: true,
-      message: '모듈 생성 성공',
+      message: '게시글 생성 성공',
     });
   } catch (error) {
-    return badRequest(res, '모듈 생성 실패');
+    return badRequest(res, '게시글 생성 실패');
   }
 });
 

@@ -10,6 +10,7 @@ var _menus = require("./menus");
 var _modules = require("./modules");
 var _popupbanner = require("./popupbanner");
 var _role = require("./role");
+var _sequence = require("./sequence");
 var _trash = require("./trash");
 
 function initModels(sequelize) {
@@ -24,6 +25,7 @@ function initModels(sequelize) {
   var modules = _modules(sequelize, DataTypes);
   var popupbanner = _popupbanner(sequelize, DataTypes);
   var role = _role(sequelize, DataTypes);
+  var sequence = _sequence(sequelize, DataTypes);
   var trash = _trash(sequelize, DataTypes);
 
 
@@ -39,6 +41,7 @@ function initModels(sequelize) {
     modules,
     popupbanner,
     role,
+    sequence,
     trash,
   };
 }

@@ -1,7 +1,7 @@
 import express from 'express';
-import { badRequest } from '../helper/customError';
+import { badRequest } from '../../helper/customError';
 
-const { member } = require('../models');
+const { member } = require('../../models');
 const router = express.Router();
 // const Op = Sequelize.Op;
 // const { isLoggedIn } = require("@routes/middleware");
