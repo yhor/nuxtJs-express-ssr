@@ -159,15 +159,18 @@ const swaggerDefinition = {
         "browser_title",
       ],
       properties: {
-        module: { type: "string", example: "모듈(board,page)"},
-        mid: { type: "string", example: "모듈url"},
-        browser_title: { type: "string", example: "브라우저 제목"},
-        layout: { type: "string", example: "PC 레이아웃"},
-        mlayout: { type: "string", example: "모바일 레이아웃"},
-        skin: { type: "string", example: "PC 스킨"},
-        mskin: { type: "string", example: "모바일 스킨"},
-        content: { type: "string", example: "PC 내용"},
-        mcontent: { type: "string", example: "모바일 내용" },
+        module_srl: { example: '모듈키'},
+        // category_srl: { example: '카테고리키'},
+        is_notice: { example: '공지사항여부 Y or N'},
+        title: { example: '제목'},
+        title_bold: { example: '두껍게여부 Y or N'},
+        title_color: { example: 'hex #123456'},
+        content: { example: '내용'},
+        tags: { example: '태그'},
+        is_allow_comment: { example: '댓글허용여부 Y or N'},
+        is_published: { example: '게시여부 Y or N'},
+        fileNames: { type: "array", example: ["07ce0660-4d82-4a16-ae1f-73e78a615632.jpg", "12bb527c-4530-4ed8-ad80-07c5e1281078.jpg"] }
+
       },
     },
 

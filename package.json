@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "edev": "nuxt",
     "dev": "nodemon --watch api --exec \"nuxt\"",
     "build": "nuxt build",
     "start": "node ./node_modules/pm2/bin/pm2 start ecosystem.config.js && node ./node_modules/pm2/bin/pm2 log",

@@ -1,10 +1,16 @@
 import express from 'express';
 import { badRequest } from '../../helper/customError';
 import { now } from '../../helper/timeHelper';
+import { s3FileCopy } from '../../helper/fileHelper';
 
-const { documents } = require('../../models');
+const {
+  documents,
+  modules,
+  sequence,
+  sequelize,
+  files
+} = require('../../models');
 const router = express.Router();
-
 
 /**
  * @swagger
@@ -33,7 +39,7 @@ const router = express.Router();
  *           application/json:
  *             example:
  *               message: "게시글 조회 성공"
- *               data: [{ 
+ *               data: [{
  *                 "module_srl": 1,
  *                 "module": "board",
  *                 "mid": "notice",
@@ -48,7 +54,7 @@ const router = express.Router();
  *               }]
  */
 
- router.get('/', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const queryCondition = req.query;
 
@@ -58,14 +64,12 @@ const router = express.Router();
       success: true,
       message: '게시글 조회 성공',
       data: result,
-      now: now()
+      now: now(),
     });
   } catch (error) {
-    console.log('error', error);
     return badRequest(res, '게시글 조회 실패', error);
   }
 });
-
 
 /**
  * @swagger
@@ -79,7 +83,7 @@ const router = express.Router();
  *       content:
  *         application/json:
  *           schema:
- *             $ref: "#/definitions/documents"
+ *             $ref: "#/definitions/document"
  *     responses:
  *       allOf:
  *       - $ref: '#/components/responses/All'
@@ -90,17 +94,58 @@ const router = express.Router();
  *               message: "게시글 생성 성공"
  */
 
- router.post('/', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
-    const insertData = req.body;
-    insertData.created_at = now();
-    await documents.create(insertData);
+    const { body } = req;
+    
+    const requestInfo = {
+      member_srl: 1,
+      nick_name: '승열',
+      ipaddress: req.ip
+    }
+    
+
+    if (!body.module_srl) return badRequest(res, '모듈을 선택해주세요');
+    if (!body.title) return badRequest(res, '제목을 입력해주세요');
+    if (!body.content) return badRequest(res, '내용을 입력해주세요');
+
+    const moduleCheck = await modules.findAll({
+      where: {
+        module_srl: body.module_srl,
+      },
+    });
+
+    if (moduleCheck.length === 0) return badRequest(res, '없는 모듈입니다');
+
+    const { seq: document_srl } = await sequence.create();
+
+    const transaction = await sequelize.transaction();
+
+    const insertData = {
+      ...requestInfo,
+      document_srl,
+      module_srl: body.module_srl,
+      title: body.title,
+      content: body.content,
+    };
+
+    await documents.create(insertData, { transaction });
+
+    if (body.fileNames.length > 0) {
+      // temp 폴더에서 사용될수있는 위치로 파일이동
+      const uploadFiles = await s3FileCopy(body.fileNames, insertData);
+
+      await files.create(uploadFiles, { transaction });
+    }
+
+    await transaction.commit();
 
     return res.json({
       success: true,
       message: '게시글 생성 성공',
     });
   } catch (error) {
+    console.log(error);
     return badRequest(res, '게시글 생성 실패');
   }
 });

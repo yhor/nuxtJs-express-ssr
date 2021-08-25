@@ -11,27 +11,27 @@ dotenv.config({ path });
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-const indexRouter = require("./routes/index");
+/* 어드민 */
 const boardRouter = require("./routes/admin/board");
 const memberRouter = require("./routes/admin/member");
 const modulesRouter = require("./routes/admin/modules");
-const fileRouter = require("./routes/file");
+const documentsRouter = require("./routes/admin/documents");
 
-app.get('/test', (req, res) => {
-  console.debug('/api/test');
-  res.send('API Test2');
-});
-
-app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-app.use("/", indexRouter);
 app.use("/admin/board", boardRouter);
 app.use("/admin/member", memberRouter);
 app.use("/admin/modules", modulesRouter);
+app.use("/admin/documents", documentsRouter);
+
+/* 공용 */
+const fileRouter = require("./routes/file");
+
 app.use("/file", fileRouter);
 
+/* 스웨거 && 디폴트페이지 */
+app.get('/', (req, res) => {res.send('API Test2')});
+app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 module.exports = {
   path: '/api',
   handler: app
 }
-

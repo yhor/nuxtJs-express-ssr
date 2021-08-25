@@ -206,16 +206,16 @@ router.post('/uploadUrl', async (req, res) => {
 
 /**
  * @swagger
- * /api/file/downloadUrl/{srl}:
+ * /api/file/downloadUrl/{sid}:
  *   post:
  *     summary: 서명된 s3의 Download url을 제공합니다.
  *     tags: [file]
  *     security:
  *       - Access_Token: []
  *     parameters:
- *      - name: "srl"
+ *      - name: "sid"
  *        in: "path"
- *        description: "파일 srl"
+ *        description: "파일 sid"
  *        required: true
  *        type: integer
  *     responses:
@@ -236,13 +236,13 @@ router.post('/uploadUrl', async (req, res) => {
  *                  { "url": "abdcdcdcd.com", "fileName": "c1c6bfcf-3a2a-4867-a8a4-08bae8c76564.jpg", "orgin_fileName": "ss.jpg" }
  */
 
-router.post('/downloadUrl/:srl', async (req, res) => {
+router.post('/downloadUrl/:sid', async (req, res) => {
   try {
-    const { srl: file_srl } = req.params;
+    const { sid } = req.params;
 
-    if (!file_srl) return badRequest(res, 'srl를 확인해주세요');
+    if (!sid) return badRequest(res, 'srl를 확인해주세요');
 
-    const result = await files.findAll({ where: { file_srl } });
+    const result = await files.findAll({ where: { sid } });
 
     const url = await new Promise((resolve, reject) => {
       const params = {
