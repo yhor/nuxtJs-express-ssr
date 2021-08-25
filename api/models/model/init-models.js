@@ -1,6 +1,7 @@
 var DataTypes = require("sequelize").DataTypes;
 var _comments = require("./comments");
 var _documents = require("./documents");
+var _file_temp = require("./file_temp");
 var _files = require("./files");
 var _member = require("./member");
 var _member_group = require("./member_group");
@@ -16,6 +17,7 @@ var _trash = require("./trash");
 function initModels(sequelize) {
   var comments = _comments(sequelize, DataTypes);
   var documents = _documents(sequelize, DataTypes);
+  var file_temp = _file_temp(sequelize, DataTypes);
   var files = _files(sequelize, DataTypes);
   var member = _member(sequelize, DataTypes);
   var member_group = _member_group(sequelize, DataTypes);
@@ -32,6 +34,7 @@ function initModels(sequelize) {
   return {
     comments,
     documents,
+    file_temp,
     files,
     member,
     member_group,

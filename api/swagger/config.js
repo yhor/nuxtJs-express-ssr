@@ -143,6 +143,33 @@ const swaggerDefinition = {
       },
     },
     
+    FileName: {
+      type: "object",
+      required:[ "fileNames"],
+      properties: {
+        fileNames: { type: "array", example: ["apap.jpg", "apap.jpg"] }
+      }
+    },
+    
+    document: {
+      type: "object",
+      required: [
+        "module",
+        "mid",
+        "browser_title",
+      ],
+      properties: {
+        module: { type: "string", example: "모듈(board,page)"},
+        mid: { type: "string", example: "모듈url"},
+        browser_title: { type: "string", example: "브라우저 제목"},
+        layout: { type: "string", example: "PC 레이아웃"},
+        mlayout: { type: "string", example: "모바일 레이아웃"},
+        skin: { type: "string", example: "PC 스킨"},
+        mskin: { type: "string", example: "모바일 스킨"},
+        content: { type: "string", example: "PC 내용"},
+        mcontent: { type: "string", example: "모바일 내용" },
+      },
+    },
 
     castInfoPut: {
       type: "object",
@@ -196,7 +223,10 @@ const options = {
   // Import swaggerDefinitions
   swaggerDefinition,
   // Path to the API docs
-  apis: [`./api/routes/*.js`],
+  apis: [
+    `./api/routes/*.js`,
+    `./api/routes/*/*.js`
+  ],
 };
 
 // Initialize swagger-jsdoc -> returns validated swagger spec in json format

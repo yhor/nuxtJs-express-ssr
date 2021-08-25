@@ -1,10 +1,5 @@
-const AWS = require('aws-sdk')
-const s3 = new AWS.S3({
-  region: 'ap-northeast-2',
-  signatureVersion: 'v4',
-})
-
-const { sequence } = require('../models')
+const { s3 } = require('../models');
+const { sequence } = require('../models');
 
 const createGuid = () => {
   return 'xxxxxxxx-xxxx-4xxx-axxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
@@ -126,7 +121,7 @@ const deleteFile = async (obj) => {
             .deleteObject({ Bucket: process.env.S3_NAME, Key: x.path })
             .promise()
 
-          await knex('fileinfo').where(x).del()
+          // await knex('fileinfo').where(x).del()
 
           file += 1
           resolve(x.file_group_cid || null)
