@@ -105,4 +105,44 @@ const router = express.Router();
   }
 });
 
+
+/**
+ * @swagger
+ * /api/admin/modules/{srl}:
+ *   delete:
+ *     summary: 모듈 삭제
+ *     tags: [admin/modules]
+ *     parameters:
+ *       - in: query
+ *         name: srl
+ *         required: false
+ *         schema:
+ *           type: "string"
+ *     responses:
+ *       allOf:
+ *       - $ref: '#/components/responses/All'
+ *       200:
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "모듈 삭제 성공"
+ */
+
+ router.delete('/:srl', async (req, res) => {
+  try {
+    const { srl } = req.params;
+
+    if (!srl) return badRequest(res, 'srl 누락');
+
+    await modules.destroy({ where: { module_srl: srl }});
+
+    return res.json({
+      success: true,
+      message: '모듈 삭제 성공',
+    });
+  } catch (error) {
+    return badRequest(res, '모듈 삭제 실패');
+  }
+});
+
 module.exports = router;

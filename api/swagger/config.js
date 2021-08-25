@@ -170,8 +170,31 @@ const swaggerDefinition = {
         is_allow_comment: { example: '댓글허용여부 Y or N'},
         is_published: { example: '게시여부 Y or N'},
         fileNames: { type: "array", example: ["07ce0660-4d82-4a16-ae1f-73e78a615632.jpg", "12bb527c-4530-4ed8-ad80-07c5e1281078.jpg"] }
-
       },
+    },
+
+    documentEdit: {
+      type: "object",
+      required: [
+        "module",
+        "mid",
+        "browser_title",
+      ],
+      properties: {
+        module_srl: { example: '모듈키'},
+        // category_srl: { example: '카테고리키'},
+        is_notice: { example: '공지사항여부 Y or N'},
+        title: { example: '제목'},
+        title_bold: { example: '두껍게여부 Y or N'},
+        title_color: { example: 'hex #123456'},
+        content: { example: '내용'},
+        tags: { example: '태그'},
+        is_allow_comment: { example: '댓글허용여부 Y or N'},
+        is_published: { example: '게시여부 Y or N'},
+        fileNames: { type: "array", example: ["07ce0660-4d82-4a16-ae1f-73e78a615632.jpg", "12bb527c-4530-4ed8-ad80-07c5e1281078.jpg"] },
+        deleteFiles: { type: "array", example: ["07ce0660-4d82-4a16-ae1f-73e78a615632.jpg", "12bb527c-4530-4ed8-ad80-07c5e1281078.jpg"] }
+      },
+
     },
 
     castInfoPut: {
