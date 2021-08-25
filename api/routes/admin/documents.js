@@ -1,4 +1,5 @@
 import express from 'express';
+import { Op } from 'sequelize';
 import { badRequest } from '../../helper/customError';
 import { now } from '../../helper/timeHelper';
 import { s3FileCopy, s3FileDelete } from '../../helper/fileHelper';
@@ -182,7 +183,10 @@ router.post('/', async (req, res) => {
 
 router.put('/:srl', async (req, res) => {
   try {
+    const { srl: document_srl } = req.params;
     const { body } = req;
+
+    if (!document_srl) return badRequest(res, 'srl 누락');
 
     const requestInfo = {
       member_srl: 1,
@@ -202,25 +206,38 @@ router.put('/:srl', async (req, res) => {
 
     if (moduleCheck.length === 0) return badRequest(res, '없는 모듈입니다');
 
-    const { seq: document_srl } = await sequence.create();
-
     const transaction = await sequelize.transaction();
 
-    const insertData = {
+    const updateData = {
       ...requestInfo,
-      document_srl,
       module_srl: body.module_srl,
       title: body.title,
       content: body.content,
     };
 
-    await documents.create(insertData, { transaction });
+    await documents.update(updateData, {
+      where: { document_srl },
+      transaction,
+    });
 
     if (body.fileNames.length > 0) {
       // temp 폴더에서 사용될수있는 위치로 파일이동
-      const uploadFiles = await s3FileCopy(body.fileNames, insertData);
+      const uploadFiles = await s3FileCopy(body.fileNames, { ...updateData, document_srl});
 
       await files.create(uploadFiles, { transaction });
+    }
+
+    if (body.deleteFiles) {
+      const where = {
+        file_srl: { [Op.in]: body.deleteFiles }
+      };
+      const getDeleteFile = await files.findAll({
+        where,
+        attributes: ['path']
+      });
+      await files.destroy({ where, transaction });
+
+      await s3FileDelete(getDeleteFile.map(x => x.path));
     }
 
     await transaction.commit();
@@ -230,7 +247,6 @@ router.put('/:srl', async (req, res) => {
       message: '게시글 생성 성공',
     });
   } catch (error) {
-    console.log(error);
     return badRequest(res, '게시글 생성 실패');
   }
 });

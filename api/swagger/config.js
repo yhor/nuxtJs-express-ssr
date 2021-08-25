@@ -192,7 +192,7 @@ const swaggerDefinition = {
         is_allow_comment: { example: '댓글허용여부 Y or N'},
         is_published: { example: '게시여부 Y or N'},
         fileNames: { type: "array", example: ["07ce0660-4d82-4a16-ae1f-73e78a615632.jpg", "12bb527c-4530-4ed8-ad80-07c5e1281078.jpg"] },
-        deleteFiles: { type: "array", example: ["07ce0660-4d82-4a16-ae1f-73e78a615632.jpg", "12bb527c-4530-4ed8-ad80-07c5e1281078.jpg"] }
+        deleteFiles: { type: "array", example: ["3", "4"] }
       },
 
     },
