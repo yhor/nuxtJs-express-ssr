@@ -75,6 +75,58 @@ router.get('/', async (req, res) => {
 
 /**
  * @swagger
+ * /api/admin/documents/detail/{srl}:
+ *   get:
+ *     summary: 게시글 디테일
+ *     tags: [admin/documents]
+ *     parameters:
+ *       - in: query
+ *         name: module
+ *         required: false
+ *         schema:
+ *           type: "string"
+ *     responses:
+ *       allOf:
+ *       - $ref: '#/components/responses/All'
+ *       200:
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: "게시글 조회 성공"
+ *               data: [{
+ *                 "module_srl": 1,
+ *                 "module": "board",
+ *                 "mid": "notice",
+ *                 "browser_title": "브라우저 제목",
+ *                 "layout": "PC 레이아웃",
+ *                 "mlayout": "모바일 레이아웃",
+ *                 "skin": "PC 스킨",
+ *                 "mskin": "모바일 스킨",
+ *                 "content": "PC 내용",
+ *                 "mcontent": "모바일 내용",
+ *                 "created_at": "2021-08-24T11:42:58.000Z"
+ *               }]
+ */
+
+router.get('/detail/:srl', async (req, res) => {
+  try {
+    const { srl: document_srl } = req.params;
+
+    if (!document_srl) return badRequest(res, 'srl 누락');
+
+    return res.json({
+      success: true,
+      message: '게시글 조회 성공',
+      data: result,
+      now: now(),
+    });
+  } catch (error) {
+    return badRequest(res, '게시글 조회 실패', error);
+  }
+});
+
+/**
+ * @swagger
  * /api/admin/documents:
  *   post:
  *     summary: 게시글 생성
@@ -99,16 +151,18 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { body } = req;
-
     const requestInfo = {
       member_srl: 1,
       nick_name: '승열',
       ipaddress: req.ip,
+      user_agent: req.headers['user-agent'],
     };
 
     if (!body.module_srl) return badRequest(res, '모듈을 선택해주세요');
     if (!body.title) return badRequest(res, '제목을 입력해주세요');
     if (!body.content) return badRequest(res, '내용을 입력해주세요');
+    if (!body.fileNames)
+      return badRequest(res, 'fileNames 리스트는 필수 입니다');
 
     const moduleCheck = await modules.findAll({
       where: {
@@ -128,6 +182,7 @@ router.post('/', async (req, res) => {
       module_srl: body.module_srl,
       title: body.title,
       content: body.content,
+      uploaded_count: body.fileNames.length,
     };
 
     await documents.create(insertData, { transaction });
@@ -192,6 +247,7 @@ router.put('/:srl', async (req, res) => {
       member_srl: 1,
       nick_name: '승열',
       ipaddress: req.ip,
+      user_agent: req.headers['user-agent'],
     };
 
     if (!body.module_srl) return badRequest(res, '모듈을 선택해주세요');
@@ -215,30 +271,41 @@ router.put('/:srl', async (req, res) => {
       content: body.content,
     };
 
-    await documents.update(updateData, {
-      where: { document_srl },
-      transaction,
-    });
-
     if (body.fileNames.length > 0) {
       // temp 폴더에서 사용될수있는 위치로 파일이동
-      const uploadFiles = await s3FileCopy(body.fileNames, { ...updateData, document_srl});
+      const uploadFiles = await s3FileCopy(body.fileNames, {
+        srl: document_srl,
+        module_srl: updateData.module_srl,
+        ipaddress: updateData.ipaddress,
+        member_srl: updateData.member_srl,
+      });
 
       await files.create(uploadFiles, { transaction });
     }
 
     if (body.deleteFiles) {
       const where = {
-        file_srl: { [Op.in]: body.deleteFiles }
+        file_srl: { [Op.in]: body.deleteFiles },
       };
       const getDeleteFile = await files.findAll({
         where,
-        attributes: ['path']
+        attributes: ['path'],
       });
       await files.destroy({ where, transaction });
 
-      await s3FileDelete(getDeleteFile.map(x => x.path));
+      await s3FileDelete(getDeleteFile.map((x) => x.path));
     }
+
+    const uploaded_count = await files.findAll({
+      where: { upload_target_srl: document_srl },
+    });
+
+    updateData.uploaded_count = uploaded_count.length;
+
+    await documents.update(updateData, {
+      where: { document_srl },
+      transaction,
+    });
 
     await transaction.commit();
 

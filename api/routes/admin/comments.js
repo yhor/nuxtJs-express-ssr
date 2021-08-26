@@ -58,6 +58,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
+    console.log('req', req.headers['user-agent']);
     // const queryCondition = req.query;
 
     // const result = await comments.findAll({ where: queryCondition });
@@ -104,8 +105,16 @@ router.post('/', async (req, res) => {
       member_srl: 1,
       nick_name: '승열',
       ipaddress: req.ip,
+      user_agent: req.headers['user-agent'],
+      updated_at: now()
     };
 
+
+    
+    comment_srl: { example: '댓글키'},
+    content: { example: '내용'},
+    fileNames: { type: "array", example: ["07ce0660-4d82-4a16-ae1f-73e78a615632.jpg", "12bb527c-4530-4ed8-ad80-07c5e1281078.jpg"] },
+    deleteFiles: { type: "array", example: ["3", "4"] }
     // if (!body.module_srl) return badRequest(res, '모듈을 선택해주세요');
     // if (!body.title) return badRequest(res, '제목을 입력해주세요');
     // if (!body.content) return badRequest(res, '내용을 입력해주세요');
@@ -122,13 +131,10 @@ router.post('/', async (req, res) => {
 
     // const transaction = await sequelize.transaction();
 
-    // const insertData = {
-    //   ...requestInfo,
-    //   document_srl,
-    //   module_srl: body.module_srl,
-    //   title: body.title,
-    //   content: body.content,
-    // };
+    const updateData = {
+      ...requestInfo,
+      content: body.content,
+    };
 
     // await comments.create(insertData, { transaction });
 
@@ -183,64 +189,76 @@ router.post('/', async (req, res) => {
 
 router.put('/:srl', async (req, res) => {
   try {
-    // const { srl: document_srl } = req.params;
-    // const { body } = req;
+    const { srl: comment_srl } = req.params;
+    const { body } = req;
 
-    // if (!document_srl) return badRequest(res, 'srl 누락');
+    if (!comment_srl) return badRequest(res, 'srl 누락');
+    
+    const requestInfo = {
+      member_srl: 1,
+      nick_name: '승열',
+      ipaddress: req.ip,
+      user_agent: req.headers['user-agent'],
+      updated_at: now()
+    };
+    
+    
+    if (!body.content) return badRequest(res, '내용을 입력해주세요');
 
-    // const requestInfo = {
-    //   member_srl: 1,
-    //   nick_name: '승열',
-    //   ipaddress: req.ip,
-    // };
+    const commentCheck = await comments.findOne({
+      where: {
+        comment_srl: body.comment_srl,
+      },
+    });
 
-    // if (!body.module_srl) return badRequest(res, '모듈을 선택해주세요');
-    // if (!body.title) return badRequest(res, '제목을 입력해주세요');
-    // if (!body.content) return badRequest(res, '내용을 입력해주세요');
+    if (!commentCheck) return badRequest(res, '없는 comment 입니다');
 
-    // const moduleCheck = await modules.findAll({
-    //   where: {
-    //     module_srl: body.module_srl,
-    //   },
-    // });
+    const transaction = await sequelize.transaction();
 
-    // if (moduleCheck.length === 0) return badRequest(res, '없는 모듈입니다');
+    const updateData = {
+      ...requestInfo,
+      content: body.content,
+    };
 
-    // const transaction = await sequelize.transaction();
+    if (body.fileNames.length > 0) {
+      // temp 폴더에서 사용될수있는 위치로 파일이동
+      const uploadFiles = await s3FileCopy(
+        body.fileNames,
+        {
+          srl: comment_srl,
+          module_srl: commentCheck.module_srl,
+          ipaddress: updateData.ipaddress,
+          member_srl: updateData.member_srl,
+        }
+      );
+      await files.create(uploadFiles, { transaction });
+    }
 
-    // const updateData = {
-    //   ...requestInfo,
-    //   module_srl: body.module_srl,
-    //   title: body.title,
-    //   content: body.content,
-    // };
+    if (body.deleteFiles) {
+      const where = {
+        file_srl: { [Op.in]: body.deleteFiles }
+      };
+      const getDeleteFile = await files.findAll({
+        where,
+        attributes: ['path']
+      });
+      await files.destroy({ where, transaction });
 
-    // await comments.update(updateData, {
-    //   where: { document_srl },
-    //   transaction,
-    // });
+      await s3FileDelete(getDeleteFile.map(x => x.path));
+    }
 
-    // if (body.fileNames.length > 0) {
-    //   // temp 폴더에서 사용될수있는 위치로 파일이동
-    //   const uploadFiles = await s3FileCopy(body.fileNames, { ...updateData, document_srl});
+    const uploaded_count = await files.findAll({
+      where: { upload_target_srl: document_srl },
+    });
 
-    //   await files.create(uploadFiles, { transaction });
-    // }
+    updateData.uploaded_count = uploaded_count.length;
 
-    // if (body.deleteFiles) {
-    //   const where = {
-    //     file_srl: { [Op.in]: body.deleteFiles }
-    //   };
-    //   const getDeleteFile = await files.findAll({
-    //     where,
-    //     attributes: ['path']
-    //   });
-    //   await files.destroy({ where, transaction });
+    await comments.update(updateData, {
+      where: { comment_srl },
+      transaction,
+    });
 
-    //   await s3FileDelete(getDeleteFile.map(x => x.path));
-    // }
-
-    // await transaction.commit();
+    await transaction.commit();
 
     return res.json({
       success: true,

@@ -194,7 +194,37 @@ const swaggerDefinition = {
         fileNames: { type: "array", example: ["07ce0660-4d82-4a16-ae1f-73e78a615632.jpg", "12bb527c-4530-4ed8-ad80-07c5e1281078.jpg"] },
         deleteFiles: { type: "array", example: ["3", "4"] }
       },
+    },
 
+    comment: {
+      type: "object",
+      required: [
+        "module",
+        "mid",
+        "browser_title",
+      ],
+      properties: {
+        document_srl: { example: '게시글키'},
+        module_srl: { example: '모듈키'},
+        parent_srl: { example: '부모댓글키'},
+        content: { example: '내용'},
+        fileNames: { type: "array", example: ["07ce0660-4d82-4a16-ae1f-73e78a615632.jpg", "12bb527c-4530-4ed8-ad80-07c5e1281078.jpg"] },
+      },
+    },
+
+    commentEdit: {
+      type: "object",
+      required: [
+        "module",
+        "mid",
+        "browser_title",
+      ],
+      properties: {
+        comment_srl: { example: '댓글키'},
+        content: { example: '내용'},
+        fileNames: { type: "array", example: ["07ce0660-4d82-4a16-ae1f-73e78a615632.jpg", "12bb527c-4530-4ed8-ad80-07c5e1281078.jpg"] },
+        deleteFiles: { type: "array", example: ["3", "4"] }
+      },
     },
 
     castInfoPut: {
@@ -215,14 +245,6 @@ const swaggerDefinition = {
         },
         allow_list: { type: "array", example: [{ key: "cid", value: "값" }] },
         del_etc_list: { type: "array", example: [1, 2, 3, 4] },
-      },
-    },
-    program: {
-      type: "object",
-      required: ["name"],
-      properties: {
-        name: { type: "string", example: "프로그램명" },
-        desc: { type: "string", example: "비고" },
       },
     },
   },

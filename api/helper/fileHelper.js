@@ -77,9 +77,9 @@ const fileGuid = async (filename) => {
 
 // 템프에서 사용하는 버킷으로 이동후 파일 삭제
 
-const s3FileCopy = async (fileArray, document) => {
-  const { document_srl, module_srl, ipaddress, member_srl } = document;
-  if (!document_srl) return Promise.reject(new Error('document_srl 누락'));
+const s3FileCopy = async (fileArray, obj) => {
+  const { srl, module_srl, ipaddress, member_srl } = obj;
+  if (!srl) return Promise.reject(new Error('srl 누락'));
   if (!module_srl) return Promise.reject(new Error('module_srl 누락'));
   if (!ipaddress) return Promise.reject(new Error('ipaddress 누락'));
   if (!member_srl) return Promise.reject(new Error('member_srl 누락'));
@@ -105,7 +105,7 @@ const s3FileCopy = async (fileArray, document) => {
             const returnData = {
               name,
               file_srl: filePath.srl,
-              upload_target_srl: document_srl,
+              upload_target_srl: srl,
               sid: createGuid(),
               module_srl,
               member_srl,
