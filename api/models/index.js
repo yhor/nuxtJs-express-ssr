@@ -10,6 +10,7 @@ const sequelize = new Sequelize(RDS_DATABASE, RDS_USERNAME, RDS_PASSWORD, {
 });
 
 const db = initModels(sequelize);
+db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 
 // 관계 정의

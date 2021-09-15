@@ -13,6 +13,8 @@ module.exports = {
   ],
   // add your custom rules here
   rules: {
-    'import/named': 'off'
+    'no-async-promise-executor': 'off',
+    'import/named': 'off',
+    camelcase: 'off'
   }
 }

@@ -143,6 +143,89 @@ const swaggerDefinition = {
       },
     },
     
+    FileName: {
+      type: "object",
+      required:[ "fileNames"],
+      properties: {
+        fileNames: { type: "array", example: ["apap.jpg", "apap.jpg"] }
+      }
+    },
+    
+    document: {
+      type: "object",
+      required: [
+        "module",
+        "mid",
+        "browser_title",
+      ],
+      properties: {
+        module_srl: { example: '모듈키'},
+        // category_srl: { example: '카테고리키'},
+        is_notice: { example: '공지사항여부 Y or N'},
+        title: { example: '제목'},
+        title_bold: { example: '두껍게여부 Y or N'},
+        title_color: { example: 'hex #123456'},
+        content: { example: '내용'},
+        tags: { example: '태그'},
+        is_allow_comment: { example: '댓글허용여부 Y or N'},
+        is_published: { example: '게시여부 Y or N'},
+        fileNames: { type: "array", example: ["07ce0660-4d82-4a16-ae1f-73e78a615632.jpg", "12bb527c-4530-4ed8-ad80-07c5e1281078.jpg"] }
+      },
+    },
+
+    documentEdit: {
+      type: "object",
+      required: [
+        "module",
+        "mid",
+        "browser_title",
+      ],
+      properties: {
+        module_srl: { example: '모듈키'},
+        // category_srl: { example: '카테고리키'},
+        is_notice: { example: '공지사항여부 Y or N'},
+        title: { example: '제목'},
+        title_bold: { example: '두껍게여부 Y or N'},
+        title_color: { example: 'hex #123456'},
+        content: { example: '내용'},
+        tags: { example: '태그'},
+        is_allow_comment: { example: '댓글허용여부 Y or N'},
+        is_published: { example: '게시여부 Y or N'},
+        fileNames: { type: "array", example: ["07ce0660-4d82-4a16-ae1f-73e78a615632.jpg", "12bb527c-4530-4ed8-ad80-07c5e1281078.jpg"] },
+        deleteFiles: { type: "array", example: ["3", "4"] }
+      },
+    },
+
+    comment: {
+      type: "object",
+      required: [
+        "module",
+        "mid",
+        "browser_title",
+      ],
+      properties: {
+        document_srl: { example: '게시글키'},
+        module_srl: { example: '모듈키'},
+        parent_srl: { example: '부모댓글키'},
+        content: { example: '내용'},
+        fileNames: { type: "array", example: ["07ce0660-4d82-4a16-ae1f-73e78a615632.jpg", "12bb527c-4530-4ed8-ad80-07c5e1281078.jpg"] },
+      },
+    },
+
+    commentEdit: {
+      type: "object",
+      required: [
+        "module",
+        "mid",
+        "browser_title",
+      ],
+      properties: {
+        comment_srl: { example: '댓글키'},
+        content: { example: '내용'},
+        fileNames: { type: "array", example: ["07ce0660-4d82-4a16-ae1f-73e78a615632.jpg", "12bb527c-4530-4ed8-ad80-07c5e1281078.jpg"] },
+        deleteFiles: { type: "array", example: ["3", "4"] }
+      },
+    },
 
     castInfoPut: {
       type: "object",
@@ -162,14 +245,6 @@ const swaggerDefinition = {
         },
         allow_list: { type: "array", example: [{ key: "cid", value: "값" }] },
         del_etc_list: { type: "array", example: [1, 2, 3, 4] },
-      },
-    },
-    program: {
-      type: "object",
-      required: ["name"],
-      properties: {
-        name: { type: "string", example: "프로그램명" },
-        desc: { type: "string", example: "비고" },
       },
     },
   },
@@ -196,7 +271,10 @@ const options = {
   // Import swaggerDefinitions
   swaggerDefinition,
   // Path to the API docs
-  apis: [`./api/routes/*.js`],
+  apis: [
+    `./api/routes/*.js`,
+    `./api/routes/*/*.js`
+  ],
 };
 
 // Initialize swagger-jsdoc -> returns validated swagger spec in json format
